@@ -1,0 +1,63 @@
+// =========================================================================
+// DOCUMENTAÇÃO DE ARQUITETURA: FUNDAMENTOS DE JAVASCRIPT MODERNO
+// Objetivo: Base de conhecimento para novos desenvolvedores do projeto.
+// =========================================================================
+
+/**
+ * TÓPICO 1: O Event Loop, Async e Await
+ * -------------------------------------------------------------------------
+ * O JavaScript é "Single Thread" (executa uma linha por vez).
+ * Para evitar que o sistema "trave" enquanto espera uma resposta demorada 
+ * (como buscar dados no Flask), usamos o modelo Assíncrono.
+ * * - async: Avisa ao interpretador que a função terá pausas.
+ * - await: Pausa a execução *apenas daquela função* até a promessa (fetch) 
+ * ser resolvida. O resto da tela continua clicável e responsiva.
+ */
+async function exemploBuscaAssincrona() {
+    console.log("1. Solicitei os dados para a API...");
+
+    try {
+        // O código pausa aqui, mas o navegador NÃO trava.
+        const resposta = await fetch('/api/teste'); 
+        console.log("3. Os dados chegaram!", resposta);
+    } catch (erro) {
+        console.error("A API falhou.", erro);
+    }
+}
+// console.log("2. Isso será impresso ANTES do passo 3, pois não esperamos a API.");
+
+
+/**
+ * TÓPICO 2: Manipulação de DOM (Data-Driven UI)
+ * -------------------------------------------------------------------------
+ * Como transformar um Array de Objetos (JSON) em elementos HTML na tela,
+ * substituindo a renderização do Jinja2 no lado do servidor.
+ * * Ferramentas utilizadas:
+ * 1. .forEach() -> Cria um laço de repetição (loop) no array.
+ * 2. Template Literals (``) -> Permite quebrar linhas no HTML e injetar 
+ * variáveis com ${}.
+ */
+function exemploRenderizacao() {
+    // 1. Nossa "Fonte da Verdade" (Os dados brutos)
+    const carros = [
+        { marca: 'Ford', modelo: 'Ka', ano: 2018 },
+        { marca: 'Fiat', modelo: 'Uno', ano: 2012 }
+    ];
+
+    // 2. Elemento alvo no HTML (ex: <div id="garagem"></div>)
+    const divGaragem = document.getElementById('garagem');
+    if (!divGaragem) return;
+
+    // 3. Limpamos a lousa antes de desenhar (evita duplicação)
+    divGaragem.innerHTML = '';
+
+    // 4. O Motor de Renderização
+    carros.forEach(carro => {
+        // Injetamos HTML puro com variáveis preenchidas
+        divGaragem.innerHTML += `
+            <p class="carro-item" data-marca="${carro.marca}">
+                O carro ${carro.modelo} é da marca ${carro.marca} e do ano ${carro.ano}.
+            </p>
+        `;
+    });
+}
