@@ -1,5 +1,19 @@
 import os
 
+def get_todos(filepath):
+    with open(filepath, 'r') as file_local:
+        todo_local = file_local.readlines()
+    return todos_local
+
+def write_todos():
+    with open('todos.txt', 'w') as file:
+    file.writelines(todos)
+
+def remove_todos():
+    index = number - 1
+    todo_removal = todos[index].strip('\n')
+    todos.pop(index)
+    
 while True:
     if not 'todos.txt' in os.listdir():
             with open('todos.txt', 'w') as file:
@@ -8,52 +22,39 @@ while True:
     action = input('Type add, show, edit, complete or exit: ')
     action = action.strip()
 
-    if 'add' in action:
+    if action.startswith("add"):
         todo = action[4:].capitalize() + '\n'
 
-        with open('todos.txt', 'r') as file:
-            todos = file.readlines()
-
+        todos = get_todos('todos.txt')
         todos.append(todo)
-
-        with open('todos.txt', 'w') as file:
-            file.writelines(todos)
+        todos = write_todos()
     
-    elif 'show' in action:
-        with open('todos.txt', 'r') as file:
-            todos = file.readlines()
+    elif action.startswith('show'):
+        todos = get_todos()
 
         for index, item in enumerate(todos):
             item = item.strip('\n')
             row = f"{index + 1}-{item}"
             print(row)
     
-    elif 'edit' in action:
+    elif action.startswith('edit'):
         number = int(action[5:])
+        
         print(number)
+        todos = get_todos()
+        pop = remove_todos()
 
-        with open('todos.txt', 'r') as file:
-            todos = file.readlines()
-        index = number - 1
-        todo_removal = todos[index].strip('\n')
-        todos.pop(index)
-
-    elif 'complete' in action:
+    elif action.startswith('complete'):
         number = int(action)[9:]
-
-        with open('todos.txt', 'r') as file:
-            todos = file.readlines()
-        index = number - 1
-        todo_removal = todos[index].strip('\n')
-        todos.pop(index)
-
-        with open('todos.txt', 'w') as file:
-            file.writelines(todos)
+        
+        todos = get_todos('todos.txt')
+        pop = remove_todos()
+        todos = write_todos()
         
         message = f'Todo {todo.removal} was removed from the list.'
         print(message)
 
-    elif 'exit' in action:
+    if action.startswith("exit"):
         break
 
     else:
